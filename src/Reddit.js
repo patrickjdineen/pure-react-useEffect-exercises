@@ -3,40 +3,23 @@ import ReactDOM from 'react-dom';
 
 function Reddit({ subreddit }){
     const [posts, setPosts] = useState([]);
-    const [error, setError] = useState(null)
 
     useEffect(()=>{
-        setError(null)
-        setPosts([])
+        console.log('render')
         //Fetch data when the component mounts
         fetch(`https://www.reddit.com/r/${subreddit}.json`)
-            .then(res =>{
-                if (res.ok){
-                    return res
-                } throw new Error('Could not fetch posts')
-            })
             .then(res=> res.json())
             .then(json =>
                 setPosts(json.data.children.map(c => c.data))
                 )
             .then(console.log('posts set'))
-            .catch(error =>{
-                setError(error.message)
-            })
     },[subreddit, setPosts]);
-
-    return (
-        <div>
-            {error ? (
-            <div>{error}</div>
-            ) : (
-            <ul>
-            {posts.map(post => (
+    return(
+        <ul>
+            {posts.map(post =>(
                 <li key={post.id}>{post.title}</li>
             ))}
-            </ul>
-        )}
-        </div>
+        </ul>
     );
 };
 
